@@ -1,0 +1,29 @@
+services:
+  app:
+    image: ghcr.io/prabhaavp/pagedock:latest
+    ports:
+      - "${BIND_ADDRESS:-127.0.0.1}:${HOST_PORT:-8080}:8080"
+    environment:
+      APP_NAME: ${APP_NAME:-Document Studio}
+      PRINTER_NAME: ${PRINTER_NAME:-Printer}
+      APP_PASSWORD: ${APP_PASSWORD:?Set APP_PASSWORD}
+      SESSION_SECRET: ${SESSION_SECRET:?Set SESSION_SECRET}
+      PRINTER_HOST: ${PRINTER_HOST:?Set PRINTER_HOST}
+      PRINTER_PORT: ${PRINTER_PORT:-9100}
+      PRINTER_DRIVER: ${PRINTER_DRIVER:?Set PRINTER_DRIVER}
+      CUPS_QUEUE: ${CUPS_QUEUE:-printer}
+      UNDO_DEPTH: ${UNDO_DEPTH:-3}
+      PUBLIC_ORIGIN: ${PUBLIC_ORIGIN:-}
+      SECURE_COOKIE: ${SECURE_COOKIE:-0}
+    volumes:
+      - data:/data
+    mem_limit: ${MEMORY_LIMIT:-1g}
+    pids_limit: 128
+    logging:
+      driver: json-file
+      options:
+        max-size: '10m'
+        max-file: '3'
+    restart: unless-stopped
+volumes:
+  data:
